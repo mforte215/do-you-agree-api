@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, \
                                        BaseUserManager, PermissionsMixin
 
@@ -33,3 +34,20 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     objects = UserManager()
     USERNAME_FIELD = 'email'
+
+    def __str__(self):
+        return self.email
+
+
+class Question(models.Model):
+    """Model for question"""
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(max_length=255)
+    text = models.TextField()
+    active = models.BooleanField(default=True)
+    upvotes = models.IntegerField(default=0)
+    downvotes = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.title
